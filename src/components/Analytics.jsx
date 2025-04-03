@@ -75,89 +75,82 @@ const Analytics = () => {
 
       {/* Overview Tab */}
       {activeTab === "Overview" ? (
-        <div className="mt-6 grid grid-cols-3 gap-4 p-3">
-          {/* Main Chart Section */}
-          <div className="bg-black p-4 rounded-2xl col-span-2 border border-gray-800">
-            {/* Dropdowns */}
-            <div className="flex gap-4 items-center mb-3">
-              <select
-                className="bg-black text-white text-xs px-3 py-2 rounded-2xl border border-gray-800"
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-              >
-                {dataTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
+  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 p-3">
+    {/* Main Chart Section */}
+    <div className="bg-black p-4 rounded-2xl md:col-span-2 border border-gray-800">
+      {/* Dropdowns */}
+      <div className="flex flex-wrap gap-4 items-center mb-3">
+        <select
+          className="bg-black text-white text-xs px-3 py-2 rounded-2xl border border-gray-800 w-full sm:w-auto"
+          value={selectedType}
+          onChange={(e) => setSelectedType(e.target.value)}
+        >
+          {dataTypes.map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+
+        <select
+          className="bg-black text-white text-xs px-3 py-2 rounded-2xl border border-gray-800 w-full sm:w-auto"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+        >
+          {dateRanges.map((range) => (
+            <option key={range} value={range}>
+              {range}
+            </option>
+          ))}
+        </select>
+
+        {/* Add Metric Dropdown */}
+        <div className="relative w-full sm:w-auto" ref={dropdownRef}>
+          <button
+            className="bg-black px-3 py-2 text-xs text-white rounded-2xl border border-gray-800 w-full sm:w-auto"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+          >
+            + Add
+          </button>
+
+          {dropdownOpen && (
+            <div className="absolute mt-2 bg-gray-900 shadow-lg rounded-2xl border border-gray-800 w-40">
+              {dataTypes
+                .filter((metric) => metric !== selectedType)
+                .map((metric) => (
+                  <button
+                    key={metric}
+                    className="block px-4 py-2 text-white hover:bg-gray-700 w-full text-left"
+                    onClick={() => handleAddMetric(metric)}
+                  >
+                    {metric}
+                  </button>
                 ))}
-              </select>
-
-              <select
-                className="bg-black text-white text-xs px-3 py-2 rounded-2xl border border-gray-800"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-              >
-                {dateRanges.map((range) => (
-                  <option key={range} value={range}>
-                    {range}
-                  </option>
-                ))}
-              </select>
-
-              {/* Add Metric Dropdown */}
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  className="bg-black px-3 py-2 text-xs text-white rounded-2xl border border-gray-800"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
-                  + Add
-                </button>
-
-                {dropdownOpen && (
-                  <div className="absolute mt-2 bg-gray-900 shadow-lg rounded-2xl border border-gray-800 w-40">
-                    {dataTypes
-                      .filter((metric) => metric !== selectedType)
-                      .map((metric) => (
-                        <button
-                          key={metric}
-                          className="block px-4 py-2 text-white hover:bg-gray-700 w-full text-left"
-                          onClick={() => handleAddMetric(metric)}
-                        >
-                          {metric}
-                        </button>
-                      ))}
-                  </div>
-                )}
-              </div>
             </div>
-
-            {/* Chart Component */}
-            <VisitorsChart
-              selectedType={selectedType}
-              selectedDate={selectedDate}
-            />
-
-            {/* Additional Metrics */}
-            {addedMetrics.map((metric) => (
-              <VisitorsChart
-                key={metric}
-                selectedType={metric}
-                selectedDate={selectedDate}
-              />
-            ))}
-          </div>
-
-          {/* Insights Section */}
-          <div className="bg-black p-6 rounded-2xl border border-gray-800">
-            <h1 className="text-2xl font-semibold">Insights</h1>
-            <p className="text-2xl font-bold mt-2">Founders: 7.4K</p>
-            <p className="text-2xl font-bold mt-2">Investors: 6.09K</p>
-            <button className="text-blue-400 mt-4">
-              View detailed insights →
-            </button>
-          </div>
+          )}
         </div>
-      ) : (
+      </div>
+
+      {/* Chart Component */}
+      <VisitorsChart selectedType={selectedType} selectedDate={selectedDate} />
+
+      {/* Additional Metrics */}
+      {addedMetrics.map((metric) => (
+        <VisitorsChart key={metric} selectedType={metric} selectedDate={selectedDate} />
+      ))}
+    </div>
+
+    {/* Insights Section */}
+    <div className="bg-black p-4 rounded-2xl border border-gray-800 text-center">
+      <h1 className="text-xl md:text-2xl font-semibold">Insights</h1>
+      <p className="text-lg md:text-2xl font-bold mt-2">Founders: 7.4K</p>
+      <p className="text-lg md:text-2xl font-bold mt-2">Investors: 6.09K</p>
+      <button className="text-blue-400 mt-4 text-sm md:text-base">
+        View detailed insights →
+      </button>
+    </div>
+  </div>
+) : (
         // Demographics Section
         <div className="mt-6">
           <div className="bg-gray-900 p-6 rounded-2xl">
