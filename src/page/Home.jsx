@@ -9,7 +9,7 @@ import Profile from "../components/Profile";
 import Settings from "../components/Settings";
 
 const Home = () => {
-  const [activeTab, setActiveTab] = useState("Dashboard");
+  const [activeTab, setActiveTab] = useState("Analytics");
 
   // Function to render content based on activeTab
   const renderContent = () => {
@@ -37,7 +37,7 @@ const Home = () => {
       <Sidebar setActiveTab={setActiveTab} activeTab={activeTab} />
       
       {/* Main Content */}
-      <div className="flex-1 bg-black text-white">
+      <div className="flex-1 bg-black text-white h-[100vh] overflow-hidden">
         <Navbar activeTab={activeTab} />
         <div className="">{renderContent()}</div>
       </div>
