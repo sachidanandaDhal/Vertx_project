@@ -131,9 +131,9 @@ const VisitorsChart = ({ selectedType, selectedDate }) => {
   return (
     <>
     <div className="text-white mt-2">
-        <p><span className="font-bold text-3xl pl-4">{formatPrice(chartValues.reduce((a, b) => a + b, 0))}</span></p>
+        <p><span className="font-bold text-2xl pl-4">{formatPrice(chartValues.reduce((a, b) => a + b, 0))}</span></p>
       </div>
-    <div className="bg-black p-4 rounded h-64">
+    <div className="bg-black  p-4 rounded h-64">
       <Line data={data} options={options} />
     </div>
     </>

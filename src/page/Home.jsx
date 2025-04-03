@@ -39,7 +39,7 @@ const Home = () => {
       {/* Main Content */}
       <div className="flex-1 bg-black text-white">
         <Navbar activeTab={activeTab} />
-        <div className="p-6">{renderContent()}</div>
+        <div className="">{renderContent()}</div>
       </div>
     </div>
   );
