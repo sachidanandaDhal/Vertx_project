@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import VisitorsChart from "./VisitorsChart";
+import { chartData } from "../constants/chartData";
 
 const dataTypes = ["Visitors", "Connections", "Interactions", "Impressions"];
 const dateRanges = [
@@ -11,13 +12,16 @@ const dateRanges = [
   "Last 30 days",
 ];
 
+const formatValue = (value) =>
+  value >= 1000 ? (value / 1000).toFixed(1) + "K" : value;
+
 const Analytics = () => {
   const [activeTab, setActiveTab] = useState("Overview");
   const [selectedType, setSelectedType] = useState("Visitors");
   const [selectedDate, setSelectedDate] = useState("Last 30 days");
   const [addedMetrics, setAddedMetrics] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const [selectedInsightType, setSelectedInsightType] = useState("Visitors");
   const dropdownRef = useRef(null);
 
   const handleAddMetric = (metric) => {
@@ -33,15 +37,42 @@ const Analytics = () => {
         setDropdownOpen(false);
       }
     }
-
     if (dropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownOpen]);
+
+  const calculateSummary = useMemo(() => {
+    const data = chartData[selectedInsightType] || [];
+    const today = new Date();
+
+    let startDate = new Date();
+    if (selectedDate === "Last 7 days") startDate.setDate(today.getDate() - 7);
+    else if (selectedDate === "Last 30 days")
+      startDate.setDate(today.getDate() - 30);
+    else if (selectedDate === "Yesterday")
+      startDate.setDate(today.getDate() - 1);
+    else if (selectedDate === "Today") startDate = today;
+    else if (selectedDate === "This week")
+      startDate.setDate(today.getDate() - today.getDay() + 1);
+    else if (selectedDate === "Last week")
+      startDate.setDate(today.getDate() - today.getDay() - 6);
+
+    const filtered = data.filter(
+      (d) => new Date(d.date) >= startDate && new Date(d.date) <= today
+    );
+    const total = filtered.reduce((sum, d) => sum + d.value, 0);
+    const founders = Math.round(total * 0.65);
+    const investors = total - founders;
+
+    return {
+      founders: formatValue(founders),
+      investors: formatValue(investors),
+    };
+  }, [selectedInsightType, selectedDate]);
 
   return (
     <div className="bg-black text-white h-screen flex flex-col">
@@ -50,7 +81,9 @@ const Analytics = () => {
         <div className="flex space-x-6">
           <button
             className={`px-4 py-2 ${
-              activeTab === "Overview" ? "border-b-2 border-white" : "text-gray-400"
+              activeTab === "Overview"
+                ? "border-b-2 border-white"
+                : "text-gray-400"
             }`}
             onClick={() => setActiveTab("Overview")}
           >
@@ -58,7 +91,9 @@ const Analytics = () => {
           </button>
           <button
             className={`px-4 py-2 ${
-              activeTab === "Demographics" ? "border-b-2 border-white" : "text-gray-400"
+              activeTab === "Demographics"
+                ? "border-b-2 border-white"
+                : "text-gray-400"
             }`}
             onClick={() => setActiveTab("Demographics")}
           >
@@ -73,8 +108,7 @@ const Analytics = () => {
         {activeTab === "Overview" ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Main Chart Section */}
-            <div className="bg-black p-4 rounded-2xl md:col-span-2 border border-gray-800 ">
-              {/* Dropdowns */}
+            <div className="bg-black p-4 rounded-2xl md:col-span-2 border border-gray-800">
               <div className="flex flex-wrap gap-4 items-center mb-3">
                 <select
                   className="bg-black text-white text-xs px-3 py-2 rounded-2xl border border-gray-800 w-full sm:w-auto"
@@ -100,7 +134,6 @@ const Analytics = () => {
                   ))}
                 </select>
 
-                {/* Add Metric Dropdown */}
                 <div className="relative w-full sm:w-auto" ref={dropdownRef}>
                   <button
                     className="bg-black px-3 py-2 text-xs text-white rounded-2xl border border-gray-800 w-full sm:w-auto"
@@ -108,7 +141,6 @@ const Analytics = () => {
                   >
                     + Add
                   </button>
-
                   {dropdownOpen && (
                     <div className="absolute mt-2 bg-gray-900 shadow-lg rounded-2xl border border-gray-800 w-40">
                       {dataTypes
@@ -127,31 +159,71 @@ const Analytics = () => {
                 </div>
               </div>
 
-              {/* Chart Component */}
-              <VisitorsChart selectedType={selectedType} selectedDate={selectedDate} />
-
-              {/* Additional Metrics */}
+              <VisitorsChart
+                selectedType={selectedType}
+                selectedDate={selectedDate}
+              />
               {addedMetrics.map((metric) => (
-                <VisitorsChart key={metric} selectedType={metric} selectedDate={selectedDate} />
+                <VisitorsChart
+                  key={metric}
+                  selectedType={metric}
+                  selectedDate={selectedDate}
+                />
               ))}
             </div>
 
             {/* Insights Section */}
-            <div className="bg-black p-4 rounded-2xl border border-gray-800 text-center ">
-              <h1 className="text-xl md:text-2xl font-semibold">Insights</h1>
-              <p className="text-lg md:text-2xl font-bold mt-2">Founders: 7.4K</p>
-              <p className="text-lg md:text-2xl font-bold mt-2">Investors: 6.09K</p>
-              <button className="text-blue-400 mt-4 text-sm md:text-base">
-                View detailed insights →
-              </button>
+            <div className="bg-black p-4 rounded-2xl border border-gray-800 text-center">
+              <div className="flex justify-between items-center mb-3">
+                <h1 className="text-xl md:text-2xl font-semibold">Insights</h1>
+                <select
+                  className="bg-black text-white text-sm border border-gray-700 rounded-full px-3 py-2 my-3"
+                  value={selectedInsightType}
+                  onChange={(e) => setSelectedInsightType(e.target.value)}
+                >
+                  {dataTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-5">
+                <p className=" flex  text-xl md:text-2xl font-semibold">
+                  Founders
+                </p>
+                <div className="flex items-baseline gap-3">
+                  <span className="text-4xl font-bold">
+                    {calculateSummary.founders}
+                  </span>
+                  <span className="text-green-400 text-sm">+000%</span>
+                  <span className="text-gray-600 text-xs">(000)</span>
+                </div>
+              </div>
+              <div className="mb-6">
+                <p className="flex  text-xl md:text-2xl font-semibold">
+                  Investors
+                </p>
+                <div className="flex items-baseline gap-3">
+                  <span className="text-4xl font-bold">
+                    {calculateSummary.investors}
+                  </span>
+                  <span className="text-green-400 text-sm">+000%</span>
+                  <span className="text-gray-600 text-xs">(000)</span>
+                </div>
+              </div>
+              <hr className="border-gray-800 mb-4" />
+              <div className="flex justify-end">
+                <button className="text-white text-sm flex items-center gap-2 mt-4 hover:underline">
+                  View detailed insights →
+                </button>
+              </div>
             </div>
           </div>
         ) : (
-          // Demographics Section
-          <div className="mt-6 ">
+          <div className="mt-6">
             <div className="bg-gray-900 p-6 rounded-2xl">
               <h2 className="text-lg font-semibold">Demographics</h2>
-              {/* Add Map Component Here */}
               <div className="h-40 bg-gray-800 rounded"></div>
               <ul className="mt-4">
                 <li>🇮🇳 India - 40%</li>
@@ -159,7 +231,9 @@ const Analytics = () => {
                 <li>🇨🇦 Canada - 10%</li>
                 <li>🇦🇪 UAE - 7%</li>
               </ul>
-              <button className="text-blue-400 mt-4">View all countries →</button>
+              <button className="text-blue-400 mt-4">
+                View all countries →
+              </button>
             </div>
           </div>
         )}
