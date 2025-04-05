@@ -90,7 +90,7 @@ const Analytics = () => {
   }, [selectedInsightType, selectedDate]);
 
   return (
-    <div className="bg-black text-white h-screen flex flex-col ">
+    <div className="bg-black text-white h-screen flex flex-col mb-5">
       {/* Top Navigation Tabs */}
       <div className="flex justify-between items-center text-xs border-b border-gray-900 bg-black sticky top-0 z-10 p-3">
         <div className="flex space-x-6">
