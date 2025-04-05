@@ -19,7 +19,7 @@ const Analytics = () => {
   const [activeTab, setActiveTab] = useState("Overview");
   const [selectedType, setSelectedType] = useState("Visitors");
   const [selectedDate, setSelectedDate] = useState("Last 30 days");
-  const [addedMetrics, setAddedMetrics] = useState([]);
+  const [addedMetrics, setAddedMetrics] = useState(["Visitors"]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedInsightType, setSelectedInsightType] = useState("Visitors");
   const dropdownRef = useRef(null);
@@ -113,7 +113,10 @@ const Analytics = () => {
                 <select
                   className="bg-black text-white text-xs px-3 py-2 rounded-2xl border border-gray-800 w-full sm:w-auto"
                   value={selectedType}
-                  onChange={(e) => setSelectedType(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedType(e.target.value);
+                    setAddedMetrics([e.target.value]);
+                  }}
                 >
                   {dataTypes.map((type) => (
                     <option key={type} value={type}>
@@ -144,7 +147,7 @@ const Analytics = () => {
                   {dropdownOpen && (
                     <div className="absolute mt-2 bg-gray-900 shadow-lg rounded-2xl border border-gray-800 w-40">
                       {dataTypes
-                        .filter((metric) => metric !== selectedType)
+                        .filter((metric) => !addedMetrics.includes(metric))
                         .map((metric) => (
                           <button
                             key={metric}
@@ -160,16 +163,9 @@ const Analytics = () => {
               </div>
 
               <VisitorsChart
-                selectedType={selectedType}
+                selectedMetrics={addedMetrics}
                 selectedDate={selectedDate}
               />
-              {addedMetrics.map((metric) => (
-                <VisitorsChart
-                  key={metric}
-                  selectedType={metric}
-                  selectedDate={selectedDate}
-                />
-              ))}
             </div>
 
             {/* Insights Section */}
@@ -189,9 +185,7 @@ const Analytics = () => {
                 </select>
               </div>
               <div className="mb-5">
-                <p className=" flex  text-xl md:text-2xl font-semibold">
-                  Founders
-                </p>
+                <p className="text-xl md:text-2xl font-semibold">Founders</p>
                 <div className="flex items-baseline gap-3">
                   <span className="text-4xl font-bold">
                     {calculateSummary.founders}
@@ -201,9 +195,7 @@ const Analytics = () => {
                 </div>
               </div>
               <div className="mb-6">
-                <p className="flex  text-xl md:text-2xl font-semibold">
-                  Investors
-                </p>
+                <p className="text-xl md:text-2xl font-semibold">Investors</p>
                 <div className="flex items-baseline gap-3">
                   <span className="text-4xl font-bold">
                     {calculateSummary.investors}
