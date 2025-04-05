@@ -199,7 +199,7 @@ const Analytics = () => {
               </div>
 
               <div className="mb-5">
-                <p className="text-xl md:text-2xl font-semibold">Founders</p>
+                <p className="flex text-xl md:text-2xl font-semibold">Founders</p>
                 <div className="flex items-baseline gap-3">
                   <span className="text-4xl font-bold">
                     {calculateSummary.founders}
@@ -210,7 +210,7 @@ const Analytics = () => {
               </div>
 
               <div className="mb-6">
-                <p className="text-xl md:text-2xl font-semibold">Investors</p>
+                <p className=" flex text-xl md:text-2xl font-semibold">Investors</p>
                 <div className="flex items-baseline gap-3">
                   <span className="text-4xl font-bold">
                     {calculateSummary.investors}

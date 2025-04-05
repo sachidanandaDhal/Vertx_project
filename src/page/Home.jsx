@@ -11,35 +11,27 @@ import Settings from "../components/Settings";
 const Home = () => {
   const [activeTab, setActiveTab] = useState("Analytics");
 
-  // Function to render content based on activeTab
   const renderContent = () => {
     switch (activeTab) {
-      case "Dashboard":
-        return <Dashboard />;
-      case "Analytics":
-        return <Analytics />;
-      case "Connect":
-        return <Connect />;
-      case "Dealroom":
-        return <Dealroom />;
-      case "Profile":
-        return <Profile />;
-      case "Settings":
-        return <Settings />;
-      default:
-        return <Dashboard />;
+      case "Dashboard": return <Dashboard />;
+      case "Analytics": return <Analytics />;
+      case "Connect": return <Connect />;
+      case "Dealroom": return <Dealroom />;
+      case "Profile": return <Profile />;
+      case "Settings": return <Settings />;
+      default: return <Dashboard />;
     }
   };
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
       <Sidebar setActiveTab={setActiveTab} activeTab={activeTab} />
-      
-      {/* Main Content */}
+
       <div className="flex-1 bg-black text-white h-[100vh] overflow-hidden">
         <Navbar activeTab={activeTab} />
-        <div className="">{renderContent()}</div>
+        <div className="flex-1 overflow-y-auto pb-16 sm:pb-0 px-4">
+          {renderContent()}
+        </div>
       </div>
     </div>
   );
