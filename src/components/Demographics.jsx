@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { ChevronDown, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import WorldMap from "./WorldMap"; // Custom D3-based map
+
+// Dropdown data
+const dataTypes = ["Visitors", "Connections", "Interactions", "Impressions"];
 
 const demographicsData = [
   { name: "India", percent: 40, flag: "🇮🇳", color: "bg-purple-600" },
@@ -17,7 +20,7 @@ const colorMap = {
 };
 
 const Demographics = () => {
-  const [metric] = useState("Visitors");
+  const [metric, setMetric] = useState("Visitors");
 
   return (
     <div className="flex flex-col lg:flex-row justify-between gap-6">
@@ -25,11 +28,19 @@ const Demographics = () => {
       <div className="w-full lg:w-2/3 flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl sm:text-2xl font-semibold">Demographics</h2>
-          <div className="relative inline-block">
-            <button className="flex items-center gap-1 bg-zinc-900 text-white text-sm px-3 py-1.5 rounded-full border border-zinc-700">
-              {metric} <ChevronDown size={16} />
-            </button>
-          </div>
+
+          {/* Metric Select */}
+          <select
+            value={metric}
+            onChange={(e) => setMetric(e.target.value)}
+            className="bg-zinc-900 text-white text-sm px-3 py-1.5 rounded-full border border-zinc-700 cursor-pointer"
+          >
+            {dataTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="w-full h-[250px] sm:h-[300px] md:h-[330px]">

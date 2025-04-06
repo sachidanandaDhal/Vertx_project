@@ -118,10 +118,10 @@ const Analytics = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Chart Section */}
             <div className="bg-black p-4 rounded-2xl md:col-span-2 border border-gray-800">
-              <div className="flex flex-wrap gap-4 items-center mb-3">
+              <div className="flex  gap-4 items-center mb-3">
                 {/* Metric Select */}
                 <select
-                  className="bg-black text-white text-xs px-3 py-2 rounded-2xl border border-gray-800 w-full sm:w-auto"
+                  className="bg-black text-white text-xs px-3 py-2 rounded-2xl border border-gray-800  sm:w-auto"
                   value={selectedType}
                   onChange={(e) => {
                     setSelectedType(e.target.value);
@@ -137,7 +137,7 @@ const Analytics = () => {
 
                 {/* Date Range Select */}
                 <select
-                  className="bg-black text-white text-xs px-3 py-2 rounded-2xl border border-gray-800 w-full sm:w-auto"
+                  className="bg-black text-white text-xs px-3 py-2 rounded-2xl border border-gray-800  sm:w-auto"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
                 >
@@ -151,7 +151,7 @@ const Analytics = () => {
                 {/* Add Metric Dropdown */}
                 <div className="relative w-full sm:w-auto" ref={dropdownRef}>
                   <button
-                    className="bg-black px-3 py-2 text-xs text-white rounded-2xl border border-gray-800 w-full sm:w-auto"
+                    className="bg-black px-3 py-2 text-xs text-white rounded-2xl border border-gray-800  sm:w-auto"
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                   >
                     + Add
